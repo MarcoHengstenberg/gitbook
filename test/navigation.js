@@ -7,7 +7,9 @@ var navigation = require('../').parse.navigation;
 
 
 var CONTENT = fs.readFileSync(path.join(__dirname, './fixtures/SUMMARY.md'), 'utf8');
+var ALT_CONTENT = fs.readFileSync(path.join(__dirname, './fixtures/ALTERNATIVE_SUMMARY.md'), 'utf8');
 var LEXED = summary(CONTENT);
+var ALT_LEXED = summary(ALT_CONTENT);
 
 
 describe('Summary navigation', function() {
@@ -18,6 +20,8 @@ describe('Summary navigation', function() {
             'chapter-1/ARTICLE1.md',
             'chapter-1/ARTICLE2.md',
             'chapter-2/README.md',
+            'chapter-1/ARTICLE-1-2-1.md',
+            'chapter-1/ARTICLE-1-2-2.md'
         ]);
 
         // Make sure it found the files we gave it
@@ -26,6 +30,8 @@ describe('Summary navigation', function() {
         assert(nav['chapter-1/ARTICLE1.md']);
         assert(nav['chapter-1/ARTICLE2.md']);
         assert(nav['chapter-2/README.md']);
+        assert(nav['chapter-1/ARTICLE-1-2-1.md']);
+        assert(nav['chapter-1/ARTICLE-1-2-2.md']);
 
 
         assert.equal(nav['README.md'].prev, null);
@@ -38,9 +44,15 @@ describe('Summary navigation', function() {
         assert.equal(nav['chapter-1/ARTICLE1.md'].next.path, 'chapter-1/ARTICLE2.md');
 
         assert.equal(nav['chapter-1/ARTICLE2.md'].prev.path, 'chapter-1/ARTICLE1.md');
-        assert.equal(nav['chapter-1/ARTICLE2.md'].next.path, 'chapter-2/README.md');
+        assert.equal(nav['chapter-1/ARTICLE2.md'].next.path, 'chapter-1/ARTICLE-1-2-1.md');
 
-        assert.equal(nav['chapter-2/README.md'].prev.path, 'chapter-1/ARTICLE2.md');
+        assert.equal(nav['chapter-1/ARTICLE-1-2-1.md'].prev.path, 'chapter-1/ARTICLE2.md');
+        assert.equal(nav['chapter-1/ARTICLE-1-2-1.md'].next.path, 'chapter-1/ARTICLE-1-2-2.md');
+
+        assert.equal(nav['chapter-1/ARTICLE-1-2-2.md'].prev.path, 'chapter-1/ARTICLE-1-2-1.md');
+        assert.equal(nav['chapter-1/ARTICLE-1-2-2.md'].next.path, 'chapter-2/README.md');
+
+        assert.equal(nav['chapter-2/README.md'].prev.path, 'chapter-1/ARTICLE-1-2-2.md');
         assert.equal(nav['chapter-2/README.md'].next.path, 'chapter-3/README.md');
     });
 
@@ -64,6 +76,21 @@ describe('Summary navigation', function() {
         assert.equal(nav['chapter-1/ARTICLE2.md'].level, '1.2');
         assert.equal(nav['chapter-2/README.md'].level, '2');
         assert.equal(nav['chapter-3/README.md'].level, '3');
+    });
+
+    it('should have a default README node', function() {
+        var nav = navigation(LEXED);
+
+        assert.equal(nav['README.md'].level, '0');
+        assert.equal(nav['README.md'].title, 'Introduction');
+    });
+
+    it('Should allow README node to be customized', function() {
+        var nav = navigation(ALT_LEXED);
+
+        assert(nav['README.md']);
+        assert.equal(nav['README.md'].level, '0');
+        assert.notEqual(nav['README.md'].title, 'Introduction');
     });
 
     it('should not accept null paths', function() {

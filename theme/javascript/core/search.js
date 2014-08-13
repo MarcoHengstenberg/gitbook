@@ -7,8 +7,6 @@ define([
     "core/sidebar"
 ], function($, _, lunr, storage, state, sidebar) {
     var index = null;
-    var $searchBar = state.$book.find(".book-search");
-    var $searchInput = $searchBar.find("input");
 
     // Use a specific idnex
     var useIndex = function(data) {
@@ -41,6 +39,7 @@ define([
     var toggleSearch = function(_state) {
         if (state != null && isSearchOpen() == _state) return;
 
+        var $searchInput = $(".book-search input");
         state.$book.toggleClass("with-search", _state);
 
         // If search bar is open: focus input
@@ -64,12 +63,14 @@ define([
         loadIndex();
 
         // Toggle search
-        state.$book.find(".book-header .toggle-search").click(function(e) {
+        $(document).on("click", ".book-header .toggle-search", function(e) {
             e.preventDefault();
             toggleSearch();
         });
 
-        $searchInput.keyup(function(e) {
+
+        // Type in search bar
+        $(document).on("keyup", ".book-search input", function(e) {
             var key = (e.keyCode ? e.keyCode : e.which);
             var q = $(this).val();
 
@@ -80,18 +81,34 @@ define([
             }
             if (q.length == 0) {
                 sidebar.filter(null);
+                storage.remove("keyword");
             } else {
                 var results = search(q);
                 sidebar.filter(
                     _.pluck(results, "path")
                 );
+                storage.set("keyword", q);
             }
-        });
+        })
+
+    };
+
+    // filter sidebar menu with current search keyword
+    var recoverSearch = function() {
+        var keyword = storage.get("keyword", "");
+        if(keyword.length > 0) {
+            if(!isSearchOpen()){
+                toggleSearch();
+            }
+            sidebar.filter(_.pluck(search(keyword), "path"));
+        }
+        $(".book-search input").val(keyword);
     };
 
     return {
         init: init,
         search: search,
-        toggle: toggleSearch
+        toggle: toggleSearch,
+        recover:recoverSearch
     };
 });

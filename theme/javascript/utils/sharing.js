@@ -13,13 +13,19 @@ define([
         },
         "google-plus": function($el) {
             window.open("https://plus.google.com/share?url="+encodeURIComponent(url))
+        },
+        "weibo": function($el) {
+            window.open("http://service.weibo.com/share/share.php?content=utf-8&url="+encodeURIComponent(url)+"&title="+encodeURIComponent(title))
+        },
+        "instapaper": function($el) {
+            window.open("http://www.instapaper.com/text?u="+encodeURIComponent(url));
         }
     };
 
 
     // Bind all sharing button
     var init = function() {
-        $("a[data-sharing]").click(function(e) {
+        $(document).on("click", "a[data-sharing],button[data-sharing]", function(e) {
             if (e) e.preventDefault();
             var type = $(this).data("sharing");
 
