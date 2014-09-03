@@ -148,7 +148,7 @@ The `SUMMARY.md` defines your book's structure. It should contain a list of chap
 
 Example:
 
-```
+```markdown
 # Summary
 
 This is the summary of my book.
@@ -166,7 +166,7 @@ Files that are not included in `SUMMARY.md` will not be processed by `gitbook`.
 
 GitBook supports building books written in multiple languages. Each language should be a sub-directory following the normal GitBook format, and a file named `LANGS.md` should be present at the root of the repository with the following format:
 
-```
+```markdown
 * [English](en/)
 * [French](fr/)
 * [Español](es/)
@@ -174,9 +174,26 @@ GitBook supports building books written in multiple languages. Each language sho
 
 You can see a complete example with the [Learn Git](https://github.com/GitbookIO/git) book.
 
+#### Glossary
+
+Allows you to specify terms and their respective definitions to be displayed in the glossary. Based on those terms, `gitbook` will automatically build an index and highlight those terms in pages.
+
+The `GLOSSARY.md` format is very simple :
+
+```markdown
+# term
+Definition for this term
+
+# Another term
+With it's definition, this can contain bold text and all other kinds of inline markup ...
+
+```
+
 #### Ignoring files & folders
 
-GitBook will read the `.gitignore`, `.bookignore` and `.ignore` files to get a list of files and folders to skip. (The format inside those files follows the same convention as `.gitignore`)
+GitBook will read the `.gitignore`, `.bookignore` and `.ignore` files to get a list of files and folders to skip. (The format inside those files follows the same convention as `.gitignore`).
+
+Best practices for the `.gitignore` is to ignore build files from [**node.js**](https://github.com/github/gitignore/blob/master/Node.gitignore) (`node_modules`, ...) and build files from GitBook: `_book`, `*.epub`, `*.mobi` and `*.pdf`.
 
 #### Cover
 

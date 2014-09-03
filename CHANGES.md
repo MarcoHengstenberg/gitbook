@@ -1,5 +1,19 @@
 # Release notes
 
+## 1.0.2
+- Update `mathjax` plugin, fixes issues with inline math rendering (no longer wanted)
+
+## 1.0.1
+- New inline math convention (kramdown's), using `$$` rather than `$` as delimiters
+- Fix instapaper sharing
+- The `exercises` & `quizzes` plugins are now by default
+
+## 1.0.0
+- New design
+- Support for glossary
+- Support for sharing to instapaper
+- Support for footnotes
+
 ## 0.7.1
 - Update `fs-extra` to `0.10.0` (fixes potential race conditions)
 
