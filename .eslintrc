@@ -1,0 +1,11 @@
+{
+    "env": {
+        "node": true,
+        "browser": true,
+        "mocha": true
+    },
+    "globals": {
+        "expect": true
+    },
+    "extends": "gitbook"
+}
